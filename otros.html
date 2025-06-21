@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=900, initial-scale=1.0">
+    <title>Órbita CSS</title>
+    <style>
+        :root {
+            --tam-canvas: 500px;
+            --orbita-duracion: 120s;
+            --amplitud-orbita: 500px;
+            --ancho-total-ventana: 100%;
+            --altura-total-ventana: 100vh;
+            --tam-circulos: 200px;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: var(--altura-total-ventana);
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Contenedor principal centrado */
+        #container {
+            margin: 0 auto;
+            position: relative;
+            width: var(--tam-canvas);
+            height: var(--tam-canvas);
+            height: var(--altura-total-ventana);
+            width: var(--ancho-total-ventana);
+        }
+
+        /* Órbita: posiciona y anima los círculos */
+        .orbita {
+            height: 0px;
+            /* este valor se deja unicamente para visualizar mejor que se trata de una caja*/
+            background-color: rgba(0, 0, 0, 0);
+            /* igual que lo anterior, esto no se aplica*/
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: var(--amplitud-orbita);
+            animation: orbitar var(--orbita-duracion) linear infinite;
+        }
+
+        .orbita-opuesta {
+            animation-direction: reverse;
+        }
+
+        /* Círculo: canvas circular animado */
+        .circulo {
+            width: var(--tam-circulos);
+            height: var(--tam-circulos);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Animación de rotación orbital */
+        @keyframes orbitar {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="container"></canvas>
+
+    <div class="orbita">
+        <canvas class="circulo"></canvas>
+    </div>
+
+    <div class="orbita orbita-opuesta">
+        <canvas class="circulo"></canvas>
+    </div>
+
+    <script src="https://unpkg.com/hydra-synth"></script>
+    <script>
+        function iniciarHydra(canvas) {
+            const hydra = new Hydra({
+                canvas: canvas,
+                detectAudio: false
+            });
+            hydra.setResolution(1000, 1000);
+            speed = 1.2;
+            shape(100, .15, .6).color(2, 0.6, 0.9)
+                .diff(shape(99, .5, 0).scrollX(.05).rotate(() => time / 10).color(0.1, 0, .75))
+                .diff(shape(99, .4, .002).scrollX(.10).rotate(() => time / 20).color(0.1, 0, .75))
+                .diff(shape(99, .3, .002).scrollX(.40).rotate(() => time / 20).color(0.1, 0, .75))
+                .diff(shape(99, .2, .002).scrollX(.20).rotate(() => time / 40).color(0.1, 0, .75))
+                .diff(shape(99, .1, .002).scrollX(.25).rotate(() => time / 50).color(0.1, 0, .75))
+                .diff(shape(99, .05, .002).scrollX(.30).rotate(() => time / 60).color(0.1, 0, .75))
+                .diff(shape(99, .025, .002).scrollX(.35).rotate(() => time / 70).color(0.1, 0, .75))
+                .diff(shape(99, .0125, .002).scrollX(.250).rotate(() => time / 80).color(0.1, 0, .75))
+                .modulateScale(
+                    shape(240, .5, 0).scrollX(.05).rotate(() => time / 10),
+                    () => (Math.sin(time / 3) * .2) + .2
+                )
+                .scale(1.6, .6, 1)
+                .out();
+        }
+
+        // Hydra para el fondo (container)
+        const fondo = document.getElementById('container');
+        if (fondo) {
+            iniciarHydra(fondo);
+        }
+
+        // Hydra para los círculos
+        const circulos = document.querySelectorAll('.circulo');
+        if (circulos.length > 0) iniciarHydra(circulos[0]);
+        if (circulos.length > 1) iniciarHydra(circulos[1]);
+    </script>
+</body>
+
+</html>
