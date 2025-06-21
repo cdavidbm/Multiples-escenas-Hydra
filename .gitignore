@@ -1,0 +1,21 @@
+# Node modules
+node_modules/
+
+# Mac system files
+.DS_Store
+
+# VSCode settings
+.vscode/
+
+# Logs
+*.log
+
+# OS generated files
+Thumbs.db
+
+# Build output
+dist/
+build/
+
+# Env files
+.env
